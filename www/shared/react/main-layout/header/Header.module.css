@@ -1,0 +1,19 @@
+@import "../../../styles/imports";
+
+.header {
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    background-color: color(var(--color-black) alpha(0.2));
+    color: var(--color-black);
+
+    & ul {
+        padding: 0;
+        display: flex;
+        list-style-type: none;
+
+        & li {
+            padding-right: 1.5rem;
+        }
+    }
+}

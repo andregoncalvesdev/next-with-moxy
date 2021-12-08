@@ -1,0 +1,50 @@
+/* ==========================================================================
+   Smooth & sharp mixins
+   ========================================================================== */
+
+@define-mixin text-smooth {
+    -moz-osx-font-smoothing: grayscale;  /* Font smoothing tweaks for MacOSx in Gecko */
+    -webkit-font-smoothing: antialiased; /* Font smoothing tweaks for MacOSx in Webkit */
+}
+
+@define-mixin text-sharp {
+    -moz-osx-font-smoothing: initial;   /* Turn off font smoothing tweaks for MacOSx in Gecko */
+    -webkit-font-smoothing: initial;    /* Turn off font smoothing tweaks for MacOSx in Webkit */
+}
+
+/* ==========================================================================
+   Text wrap related mixins
+
+   Please note that for text-ellipsis and text-ellipsis-multiline to work,
+   they most likely need to be restricted in width
+   ========================================================================== */
+
+@define-mixin text-wrap {
+    white-space: normal;
+    word-wrap: anywhere;
+    word-break: break-word; /* Needed for iOS Safari, since it does not support `word-wrap: anywhere` */
+}
+
+@define-mixin text-nowrap {
+    white-space: nowrap;
+    word-wrap: normal;
+    word-break: normal;
+}
+
+@define-mixin text-ellipsis {
+    @mixin text-nowrap;
+    overflow: hidden; /* "overflow" value must be different from "visible" */
+    text-overflow: ellipsis;
+}
+
+@define-mixin text-ellipsis-multiline $maxLineCount, $maxHeight {
+    @mixin text-wrap;
+    max-height: $maxHeight;
+    overflow: hidden;
+    /* stylelint-disable */
+    display: -webkit-box;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: $maxLineCount;
+    -webkit-box-orient: vertical;
+    /* stylelint-enable */
+}

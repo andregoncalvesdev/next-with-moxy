@@ -1,0 +1,9 @@
+@import "../../../styles/imports";
+
+.footer {
+    height: 5rem;
+    display: flex;
+    align-items: center;
+    background-color: color(var(--color-black) alpha(0.2));
+    color: var(--color-black);
+}

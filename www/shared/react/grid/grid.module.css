@@ -1,0 +1,112 @@
+@import "../../styles/imports";
+
+.container {
+    width: var(--grid-width);
+    min-width: var(--grid-min-width);
+    max-width: var(--grid-max-width);
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.row {
+    margin-right: calc(-1 * var(--grid-gutter));
+    margin-left: calc(-1 * var(--grid-gutter));
+    padding-right: calc(var(--grid-gutter) / 2);
+    padding-left: calc(var(--grid-gutter) / 2);
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.col {
+    width: 100%;
+    max-width: 100%;
+    padding-right: calc(var(--grid-gutter) / 2);
+    padding-left: calc(var(--grid-gutter) / 2);
+    flex: 1 0 0%;
+}
+
+/* Row: justify-content */
+@each $justify-content-variant in (flex-start, center, flex-end, space-between, space-around, space-evenly) {
+    @each $breakpoint in (xxs, xs, sm, md, lg, xl, xxl) {
+        @media (--gte-$breakpoint) {
+            .row-justify-content-$(breakpoint)-$(justify-content-variant) {
+                justify-content: $justify-content-variant;
+            }
+        }
+    }
+}
+
+/* Row: align-items */
+@each $align-items-variant in (flex-start, center, flex-end, baseline, stretch) {
+    @each $breakpoint in (xxs, xs, sm, md, lg, xl, xxl) {
+        @media (--gte-$breakpoint) {
+            .row-align-items-$(breakpoint)-$(align-items-variant) {
+                align-items: $align-items-variant;
+            }
+        }
+    }
+}
+
+/* col: [xxs, xxl] */
+@each $breakpoint in (xxs, xs, sm, md, lg, xl, xxl) {
+    $columns: 12;
+    $offsets: 11;
+
+    @media (--gte-$breakpoint) {
+        /* columns = auto */
+        .col-column-$(breakpoint)-auto {
+            width: auto;
+            max-width: none;
+            flex: 0 0 auto;
+        }
+
+        /* columns = <number> */
+        @for $x from 1 to $columns by 1 {
+            .col-column-$(breakpoint)-$(x) {
+                width: calc($x / $columns * 100%);
+                max-width: calc($x / $columns * 100%);
+                flex: 0 0 calc($x / $columns * 100%);
+            }
+        }
+
+        /* offset = <number> */
+        @for $x from 0 to $offsets by 1 {
+            @media (--gte-$breakpoint) {
+                .col-offset-$(breakpoint)-$(x) {
+                    margin-left: calc($x / $columns * 100%);
+                }
+            }
+        }
+    }
+}
+
+/* Col: [xxs, sm] (overrides) */
+@each $breakpoint in (xxs, xs, sm) {
+    $columns: 8;
+    $offsets: 7;
+
+    @media (--gte-$breakpoint) and (--lt-md) {
+        /* columns = auto */
+        .col-column-$(breakpoint)-auto {
+            width: auto;
+            max-width: none;
+            flex: 0 0 auto;
+        }
+
+        /* columns = <number> */
+        @for $x from 1 to $columns by 1 {
+            .col-column-$(breakpoint)-$(x) {
+                width: calc($x / $columns * 100%);
+                max-width: calc($x / $columns * 100%);
+                flex: 0 0 calc($x / $columns * 100%);
+            }
+        }
+
+        /* offset = <number> */
+        @for $x from 0 to $offsets by 1 {
+            .col-offset-$(breakpoint)-$(x) {
+                margin-left: calc($x / $columns * 100%);
+            }
+        }
+    }
+}

@@ -1,0 +1,90 @@
+@import "./custom-medias";
+
+/* ==========================================================================
+   Colors
+   ========================================================================== */
+
+:root {
+    --color-white: #fff;
+    --color-black: #000;
+}
+
+/* ==========================================================================
+   Layout
+   ========================================================================== */
+
+:root {
+    --viewport-min-width: 32rem;
+}
+
+/* ==========================================================================
+   Grid
+   Must be the same as the one defined in grid.module.css
+   ========================================================================== */
+
+/* [xxs, xxs] */
+
+:root {
+    --grid-columns: 4;
+    --grid-gutter: 1.6rem;
+    --grid-width: calc(100% - (2rem * 2));
+    --grid-min-width: auto;
+    --grid-max-width: none;
+}
+
+/* [xs, sm[ */
+
+:root {
+    @media (--gte-xs) {
+        --grid-max-width: 66rem;
+    }
+}
+
+/* [sm, md[ */
+
+:root {
+    @media (--gte-sm) {
+        --grid-columns: 8;
+        --grid-gutter: 2rem;
+        --grid-width: 85%;
+        --grid-max-width: none;
+    }
+}
+
+/* [md, lg[ */
+
+:root {
+    @media (--gte-md) {
+        --grid-columns: 12;
+        --grid-max-width: 102.4rem;
+    }
+}
+
+/* [lg, infinity[ */
+
+:root {
+    @media (--gte-lg) {
+        --grid-gutter: 3.2rem;
+        --grid-max-width: 120rem;
+    }
+}
+
+/* ==========================================================================
+   Z-index
+   ========================================================================== */
+
+:root {
+    --z-index-base: 0;
+    --z-index-cookie-banner: 1000;
+    --z-index-nprogress: 5000;
+}
+
+/* ==========================================================================
+   Transitions / Animations timings
+   ========================================================================== */
+
+:root {
+    --duration-fast: 0.15s;
+    --duration-standard: 0.3s;
+    --duration-long: 0.4s;
+}

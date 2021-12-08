@@ -1,0 +1,107 @@
+name: Deploy on Vercel
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - docusaurus/**/*
+  pull_request:
+    paths-ignore:
+      - docusaurus/**/*
+
+env:
+  VERCEL_ORG_ID: team_p8EekuXu9HkFUEY7yLOeujBS
+  VERCEL_PROJECT_ID: QmYUpNNm3Aw2W2W59sdNwKdcNduZXXQGhNgc4crdtASxNZ
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '16'
+
+      - name: Set environment variables (master)
+        if: github.ref == 'refs/heads/master'
+        env:
+          SITE_URL: https://next-with-moxy.vercel.app
+        run: |
+          echo "SITE_URL=$SITE_URL" >> $GITHUB_ENV
+
+      - name: Set environment variables (PR)
+        if: github.event_name == 'pull_request'
+        env:
+          SITE_URL: https://next-with-moxy-pr-${{ github.event.number }}.vercel.app
+        run: |
+          echo "SITE_URL=$SITE_URL" >> $GITHUB_ENV
+
+      - name: Comment URL
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        uses: unsplash/comment-on-pr@master
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        with:
+          msg: |
+            This pull-request can be previewed at ${{ env.SITE_URL }}.
+            Please check the `Vercel` status below to see when it's ready.
+
+      - name: Set deployment status
+        uses: pbrandone/create-status-action@master
+        with:
+          token: ${{ github.token }}
+          state: pending
+          context: Vercel
+          description: Deploying to Vercel...
+
+      - name: Deploy (master)
+        if: github.ref == 'refs/heads/master'
+        run: |
+          DEPLOYMENT_URL=$(\
+            npx vercel \
+              -t $VERCEL_TOKEN \
+              --scope moxystudio \
+              --prod \
+              --build-env SITE_URL=$SITE_URL \
+          )
+
+      - name: Deploy (PR)
+        if: github.event_name == 'pull_request'
+        run: |
+          DEPLOYMENT_URL=$(\
+            npx vercel \
+              -t $VERCEL_TOKEN \
+              --scope moxystudio \
+              --build-env SITE_URL=$SITE_URL \
+          )
+
+          DEPLOYMENT_URL_ALIAS=$(echo $SITE_URL | sed 's/https\?:\/\///')
+          npx vercel alias \
+            -t $VERCEL_TOKEN \
+            --scope moxystudio \
+            $DEPLOYMENT_URL \
+            $DEPLOYMENT_URL_ALIAS
+
+      - name: Set success deployment status
+        if: success()
+        uses: pbrandone/create-status-action@master
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          state: success
+          context: Vercel
+          description: Vercel deployment ready!
+          url: ${{ env.SITE_URL }}
+
+      - name: Set failed deployment status
+        if: failure()
+        uses: pbrandone/create-status-action@master
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          state: failure
+          context: Vercel
+          description: Vercel deployment failed

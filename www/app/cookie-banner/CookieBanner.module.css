@@ -1,0 +1,24 @@
+@import "../../shared/styles/imports";
+
+.cookieBanner {
+    @mixin position fixed, null, 0, 0, 0;
+    min-width: var(--viewport-min-width);
+    min-height: 8rem;
+    z-index: calc(var(--z-index-cookie-banner) + 1);
+    padding: 2rem 0;
+    display: flex;
+    align-items: center;
+    border-top: 0.1rem solid;
+    background-color: var(--color-white);
+    color: var(--color-black);
+    @mixin typography-body-2;
+
+    & .buttonsCol {
+        display: flex;
+        flex: 0 0 auto;
+
+        & button {
+            margin-left: 1.5rem;
+        }
+    }
+}
